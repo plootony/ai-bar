@@ -1,23 +1,35 @@
-@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap');
-
 * {
     padding: 0;
     margin: 0;
+    box-sizing: border-box;
 }
 
 html,
 body {
-    width: 100%;
-    min-height: 100vh;
-    height: 100%;
-    font-family: 'Pixelify Sans', system-ui, sans-serif;
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Arial', system-ui, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
 
+    &::before {
+        content: '';
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background-image: url(./assets/bg.png);
+        filter: blur(16px);
+    }
 }
 
-#app {
-    outline: 1px solid orange;
-    min-height: 960px;
-    width: 1536px;
+#game {
+    height: 1080px;
+    width: 1920px;
     background-color: #000;
     background-image: url('./assets/bg.png');
     background-size: cover;
@@ -27,68 +39,255 @@ body {
     justify-content: center;
     background-repeat: no-repeat;
     overflow: hidden;
+    position: relative;
+    border-radius: 6px;
+    box-shadow: 0px 0px 50px 0px rgba(133, 83, 83, 0.3);
 }
 
-.scene {
-    width: 1254px;
-    height: 600px;
 
-    &__person {
-        position: absolute;
-        display: flex;
-        width: 320px;
-        height: 420px;
-    }
+// Слоты персонажей
+.slot {
+    position: absolute;
+    display: flex;
+    width: 320px;
+    height: 420px;
 
-
-
-    &--person-1 {
+    &--1 {
         object-fit: contain;
-        left: 65px;
-        top: 253px;
-        background-image: url(./assets/lu.png);
-        background-size: cover;
+        left: 190px;
+        top: 300px;
+        // border: 1px solid red;
+
+        .bubble {
+            top: -30px;
+        }
     }
 
-    &--person-2 {
+    &--2 {
         object-fit: contain;
-        left: 407px;
-        top: 245px;
-        background-image: url(./assets/kenzi.png);
-        background-size: cover;
+        left: 580px;
+        top: 300px;
+        // border: 1px solid rgb(0, 255, 34);
+
+        .bubble {
+            bottom: -80px;
+        }
     }
 
-    &--person-3 {
+    &--3 {
         object-fit: contain;
-        left: 773px;
-        top: 245px;
-        background-image: url(./assets/mona.png);
-        background-size: cover;
+        left: 990px;
+        top: 300px;
+        // border: 1px solid rgb(153, 0, 255);
+
+        .bubble {
+            top: -70px;
+        }
     }
+
+    &--4 {
+        object-fit: contain;
+        right: 220px;
+        top: 300px;
+        // border: 1px solid rgb(202, 223, 21);
+
+        .bubble {
+            top: 0;
+        }
+    }
+}
+
+// Слоты напитков
+.drink {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    opacity: .7;
+
+    &--slot-1 {
+        bottom: -40px;
+    }
+
+    &--slot-2 {
+        bottom: -40px;
+    }
+
+    &--slot-3 {
+        bottom: -80px
+    }
+
+    &--slot-4 {
+        bottom: -90px;
+        left: -40px;
+    }
+
+    &--wine {
+        background-image: url(./assets/drink_wine.png);
+        background-size: contain;
+    }
+
+    &--marry {
+        background-image: url(./assets/drink_marry.png);
+        background-size: contain;
+    }
+
+    &--jack {
+        background-image: url(./assets/drink_jack.png);
+        background-size: contain;
+        width: 130px;
+        height: 130px;
+    }
+
+    &--tequilla {
+        background-image: url(./assets/drink_teq.png);
+        background-size: contain;
+        width: 100px;
+        height: 100px;
+        bottom: -50px;
+        left: 10px;
+    }
+}
+
+// Персонажи
+.person {
+    position: absolute;
+    transition: .3s;
+    cursor: pointer;
+
+    &:hover {
+        transform: scale(1.02);
+    }
+
+}
+
+.emotion {
+    position: absolute;
+    right: 80px;
+    top: 220px;
+    width: 50px;
+    height: 20px;
+    background: white;
+    color: black;
+    font-size: 12px;
+    padding: 4px;
+    text-align: center;
 }
 
 .lu {
     width: 300px;
     height: 400px;
+    background-image: url(./assets/lu.png);
+    background-size: cover;
+    top: 32px;
+    left: 8px;
+
+    &:hover {
+        filter: drop-shadow(0 0 0.75rem rgb(236, 119, 143));
+    }
 }
 
-.bubble-1 {
-    top: 162px;
-    left: 163px;
+.kenzi {
+    width: 310px;
+    height: 410px;
+    background-image: url(./assets/kenzi.png);
+    background-size: cover;
+    top: 32px;
+    left: 8px;
+
+    &:hover {
+        filter: drop-shadow(0 0 0.75rem rgb(107, 51, 209));
+    }
 }
 
-.bubble-2 {
-    top: 500px;
-    left: 530px;
+.vital {
+    width: 330px;
+    height: 430px;
+    background-image: url(./assets/vital.png);
+    background-size: cover;
+    top: 32px;
+    left: 8px;
+
+    &:hover {
+        filter: drop-shadow(0 0 0.75rem rgb(33, 88, 190));
+    }
 }
 
+.misha {
+    width: 330px;
+    height: 430px;
+    background-image: url(./assets/misha.png);
+    background-size: cover;
+    top: 50px;
+    left: 8px;
 
-.bubble-3 {
-    top: 500px;
-    right: 200px;
+    &:hover {
+        filter: drop-shadow(0 0 0.75rem rgb(247, 119, 45));
+    }
 }
 
+.controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    height: 220px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+}
 
+.bubble-show {
+    animation: show 3s;
+}
+
+.bubble-hide {
+    animation: hide 3s;
+}
+
+.bubble--barmen {
+    left: 900px;
+    bottom: 200px;
+    width: 300px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    textarea {
+        width: 100%;
+        background: none;
+        border: none;
+        resize: none;
+        overflow: hidden;
+        outline: none;
+        font-family: 'Arial', system-ui, sans-serif;
+        font-size: 20px;
+        text-align: center;
+        font-style: italic;
+    }
+}
+
+@keyframes show {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes hide {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
 
 .bubble {
     --bubble-bg: #fff7e8;
@@ -101,12 +300,14 @@ body {
     position: absolute;
     z-index: 20;
 
+    font-style: italic;
+
     max-width: 320px;
     min-width: 120px;
     padding: 14px 22px 16px;
 
     font-family: 'Pixelify Sans', system-ui, sans-serif;
-    font-size: 24px;
+    font-size: 22px;
     line-height: 1.05;
     font-weight: 500;
     text-align: center;
@@ -222,21 +423,4 @@ body {
     --bubble-bg: #f2efe7;
     color: #3a3029;
     font-style: italic;
-}
-
-.bubble--angry {
-    --bubble-bg: #ffe6df;
-    --bubble-border: #4a1414;
-    color: #341010;
-}
-
-.bubble--whisper {
-    --bubble-bg: rgba(255, 247, 232, 0.88);
-    opacity: 0.92;
-}
-
-.bubble--dark {
-    --bubble-bg: #2a211e;
-    --bubble-border: #f0c98a;
-    color: #fff0d2;
 }

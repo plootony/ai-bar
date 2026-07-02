@@ -1,13 +1,56 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ai-life</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ai-life</title>
+</head>
+
+<body>
+  <div id="game">
+
+    <div class="slot slot--1">
+      <div class="bubble bubble--bottom-left bubble-show">Не грусти, а то сиськи не будут расти!</div>
+      <div class="person lu">
+        <div class="emotion">angry</div>
+      </div>
+      <div class="drink drink--slot-1 drink--wine"></div>
+    </div> <!-- slot-1 -->
+
+    <div class="slot slot--2">
+      <div class="bubble bubble--top-left bubble--thinking bubble-hide">У меня похитили член...</div>
+      <div class="person kenzi">
+
+      </div>
+      <div class="drink drink--slot-2 drink--marry"></div>
+    </div> <!-- slot-2 -->
+
+
+    <div class="slot slot--3">
+      <div class="bubble bubble--bottom-right bubble--angry"> Приветствую, вас дорогие друзья! Большое
+        спасибо,что
+        подключились!</div>
+      <div class="person vital"></div>
+      <div class="drink drink--slot-3 drink--jack"></div>
+    </div> <!-- slot-3 -->
+
+    <div class="slot slot--4">
+      <div class="bubble bubble--bottom-right bubble--thinking">Аниме - говно!</div>
+      <div class="person misha"></div>
+      <div class="drink drink--slot-4 drink--tequilla"></div>
+    </div> <!-- slot-4 -->
+  </div>
+
+  <div class="controls">
+    <div class="bubble bubble--bottom-left bubble--barmen">
+      <textarea>Как вас зовут?</textarea>
+    </div>
+  </div>
+  </div> <!-- game -->
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
 </html>
