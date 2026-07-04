@@ -2,9 +2,11 @@ import './style.scss'
 import { Mistral } from '@mistralai/mistralai';
 
 
-let currentAgentId = '';
+let currentAgentId = 'ag_019f2d0f980c77f285166e0fc0d77460';
 let currentSlot = 0;
-let history = [];
+let target = null;
+let conversationId = null;
+let loopTimeoutId = null;
 
 const slots = document.querySelectorAll('.slot');
 const barmenMessage = document.querySelector('.barmen-input');
@@ -14,65 +16,69 @@ const slot3 = slots[2];
 const slot4 = slots[3];
 let messages = [];
 
-const AGENTS = [
-    {
-        id: 'ag_019f22921f0c75f7b561ab8f4bdeb5d8',
-        name: 'Lou'
-    },
-    {
-        id: 'ag_019f2449859474f7a183fdeae0cdfc03',
-        name: 'Kenzi'
-    },
-    {
-        id: 'ag_019f244cefaa77589b3713913dff7002',
-        name: 'Vital'
-    },
-    {
-        id: 'ag_019f244f88b2746f84f4a5156e55e0b5',
-        name: 'Misha'
-    }
-]
-
-slots.forEach((slot, key) => {
-    slot.addEventListener('click', () => {
-        currentAgentId = AGENTS[key].id;
-        currentSlot = key;
-    })
-})
+let persons = ['Lou', 'Kenzi', 'Vital', 'Misha'];
+let currentPerson = null;
+let lastDialog = '';
+let lastTarget = '';
 
 const client = new Mistral({
     apiKey: import.meta.env.VITE_MISTRAL_API_KEY,
 });
 
+
+
+
+slots.forEach((slot, key) => {
+    slot.addEventListener('click', () => {
+        currentPerson = persons[key]
+        currentSlot = key;
+    })
+})
+
 async function main() {
-    const historyText = history
-        .map(h => `Автор: ${h.name}\nНастроение: ${h.emotion}\nТекст: ${h.text}`)
-        .join('\n\n');
+    const response = conversationId
+        ? await client.beta.conversations.append({
+            conversationId,
+            conversationAppendRequest: { inputs: messages },
+        })
+        : await client.beta.conversations.start({
+            agentId: currentAgentId,
+            inputs: messages,
+        });
+    conversationId = response.conversationId ?? conversationId;
 
-    const inputs = historyText
-        ? [{ role: 'user', content: `${historyText}\n\n${messages[0].content}` }]
-        : messages;
+    const output = JSON.parse(response.outputs[0].content)
+    console.log(output);
 
-    const response = await client.beta.conversations.start({
-        agentId: currentAgentId,
-        inputs,
-    });
+    if (loopTimeoutId) clearTimeout(loopTimeoutId);
+    loopTimeoutId = setTimeout(() => {
+        main();
+    }, 5000)
 
-    const raw = response.outputs[0].content.replace(/^```json\s*|```$/g, '').trim();
-    const output = JSON.parse(raw);
+    const avatar = output.avatar.trim().toLowerCase();
 
-    history.push({
-        name: output.name,
-        emotion: output.emotion,
-        text: output.text
-    });
+    if (avatar === 'lu') { currentSlot = 0; }
+    else if (avatar === 'kenzi') { currentSlot = 1; }
+    else if (avatar === 'vital') { currentSlot = 2; }
+    else if (avatar === 'misha') { currentSlot = 3; }
+    else {
+        console.warn('Неизвестный avatar от модели:', output.avatar);
+        return; // не рендерим в случайный слот
+    }
 
-    history = history.slice(-10);
-
-    console.log(history);
-
+    document.querySelector('.step').innerHTML = output.avatar;
     slots[currentSlot].children[0].textContent = output.text
     slots[currentSlot].children[2].textContent = output.emotion
+
+    lastDialog = output.text;
+    lastTarget = output.avatar
+
+    messages = [
+        { "role": "user", "content": `Автор сообщения: ${output.avatar}; Кому предназначено сообщение: - случайный аватар; Текст сообщения: ${lastDialog}` }
+    ]
+
+
+
 }
 
 barmenMessage.addEventListener('keypress', function (e) {
@@ -82,18 +88,13 @@ barmenMessage.addEventListener('keypress', function (e) {
             return;
         }
 
+        if (loopTimeoutId) clearTimeout(loopTimeoutId);
+
         messages = [
-            { "role": "user", "content": `${barmenMessage.value}` }
+            { "role": "user", "content": `Автор сообщения: barmen; Кому предназначено сообщение: ${currentPerson}; Текст сообщения: ${barmenMessage.value}` }
         ]
-
-        history.push({
-            name: 'Бармен',
-            emotion: '',
-            text: barmenMessage.value
-        });
-
-        history = history.slice(-10);
-
         main();
+
+
     }
 });
